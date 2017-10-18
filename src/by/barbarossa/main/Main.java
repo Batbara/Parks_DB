@@ -1,7 +1,9 @@
 package by.barbarossa.main;
 
-public class Main {
-    static public  void main (String[] args){
+import by.barbarossa.representation.MainFrame;
 
+public class Main {
+    static public void main (String[] args){
+        MainFrame.getInstance();
     }
 }
