@@ -26,4 +26,11 @@ public class FirmService implements ParksAndRecService{
     public void delete() {
 
     }
+
+    @Override
+    public void updateTable(String columnName, Object value, int row) {
+        DAOFactory daoFactory = DAOFactory.getInstance();
+        ParksAndRecDAO firmDAO = daoFactory.getDAO("firm");
+        firmDAO.updateTable(columnName,value,row);
+    }
 }

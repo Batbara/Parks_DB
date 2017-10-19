@@ -61,4 +61,8 @@ public class MainFrame extends Observable{
     public void setTableNameLabel(String text){
         tableName.setText(text);
     }
+
+    public TableView getTableView() {
+        return tableView;
+    }
 }

@@ -13,15 +13,17 @@ public class ViewTableListener extends Observable implements ActionListener {
     private String menuName;
     public ViewTableListener(String menuName) {
         ControllerFactory factory = ControllerFactory.getInstance();
+        Controller controller = factory.getController(menuName);
+
         if (menuName.equals("Фирма")) {
-        FirmController firmController = (FirmController)factory.getController("firm");
-        this.menuName = menuName;
-        this.addObserver(firmController);
-    }
+           // FirmController firmController = (FirmController) factory.getController("firm");
+            //this.menuName = menuName;
+            this.addObserver(controller);
+        }
+
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("lalalla");
         setChanged();
         notifyObservers("select");
     }

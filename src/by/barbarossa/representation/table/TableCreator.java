@@ -10,18 +10,19 @@ import java.util.List;
 import java.util.Vector;
 
 public class TableCreator {
-    public static DefaultTableModel createTableModel(List<String> header, List<List<String>> rows){
+    public static DefaultTableModel createTableModel(List<String> header, List<List<String>> rows) {
 
-        DefaultTableModel tableModel = new DefaultTableModel(header.toArray(),0) {
+        DefaultTableModel tableModel = new DefaultTableModel(header.toArray(), 0) {
             @Override
-            public boolean isCellEditable(int row, int column){
-                return false;
+            public boolean isCellEditable(int row, int column) {
+                return column != 0;
             }
         };
-        for(List<String> row : rows){
+        for (List<String> row : rows) {
             tableModel.addRow(new Vector(row));
         }
         return tableModel;
 
     }
+
 }
