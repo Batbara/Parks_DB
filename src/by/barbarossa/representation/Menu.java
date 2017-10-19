@@ -1,5 +1,7 @@
 package by.barbarossa.representation;
 
+import by.barbarossa.representation.listeners.DeleteRecordListener;
+import by.barbarossa.representation.listeners.ShowDialogListener;
 import by.barbarossa.representation.listeners.ViewTableListener;
 
 import javax.swing.*;
@@ -21,7 +23,7 @@ public class Menu {
     }
     private void initMenuItems(){
         menuItems = new HashMap<>();
-        String[] itemNames = {"Показать", "Добавить", "Редактировать","Удалить"};
+        String[] itemNames = {"Показать", "Добавить", "Удалить"};
         for(String itemName : itemNames){
             menuItems.put(itemName,new JMenuItem(itemName));
         }
@@ -34,6 +36,8 @@ public class Menu {
     }
     private void addListeners(String menuName){
         menuItems.get("Показать").addActionListener(new ViewTableListener(menuName));
+        menuItems.get("Удалить").addActionListener(new DeleteRecordListener(menuName));
+        menuItems.get("Добавить").addActionListener(new ShowDialogListener(menuName));
     }
     public JMenu getMenu() {
         return menu;

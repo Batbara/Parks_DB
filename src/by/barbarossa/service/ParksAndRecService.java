@@ -4,8 +4,8 @@ import java.sql.ResultSet;
 import java.util.List;
 
 public interface ParksAndRecService {
-    void insert();
+    void insert(Object object);
     List select();
-    void delete();
-    void updateTable(String columnName, Object value, int row);
+    void delete(int id);
+    void updateTable(String columnName, Object value, Object row);
 }

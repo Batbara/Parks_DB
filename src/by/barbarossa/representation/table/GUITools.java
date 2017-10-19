@@ -6,10 +6,13 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
-public class TableCreator {
+public class GUITools {
     public static DefaultTableModel createTableModel(List<String> header, List<List<String>> rows) {
 
         DefaultTableModel tableModel = new DefaultTableModel(header.toArray(), 0) {
@@ -23,6 +26,17 @@ public class TableCreator {
         }
         return tableModel;
 
+    }
+    public static Map<JLabel, JTextField> createFields(String[] labelNames){
+
+        Map<JLabel, JTextField> fields = new LinkedHashMap<>();
+        for(String name : labelNames){
+            JLabel label = new JLabel(name);
+            JTextField textField = new JTextField(10);
+            fields.put(label,textField);
+
+        }
+        return fields;
     }
 
 }

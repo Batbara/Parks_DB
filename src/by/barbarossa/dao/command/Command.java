@@ -1,5 +1,8 @@
 package by.barbarossa.dao.command;
 
 public interface Command {
-    public String formStatement(String arg);
+    String formUpdateStatement(String arg);
+    String formDeleteStatement(String arg);
+    String formInsertStatement(String arg);
+
 }

@@ -2,19 +2,15 @@ package by.barbarossa.representation.listeners;
 
 import by.barbarossa.controller.Controller;
 import by.barbarossa.controller.ControllerFactory;
-import by.barbarossa.representation.dialogs.CommonDialog;
-import by.barbarossa.representation.dialogs.DialogsFactory;
+import by.barbarossa.representation.MainFrame;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Map;
 import java.util.Observable;
 
-public class AddRecordListener extends Observable implements ActionListener{
-    private String menuName;
-    public AddRecordListener(String menuName){
-        this.menuName = menuName;
+public class DeleteRecordListener extends Observable implements ActionListener {
+    public DeleteRecordListener(String menuName){
         ControllerFactory factory = ControllerFactory.getInstance();
         Controller controller = factory.getController(menuName);
 
@@ -26,13 +22,13 @@ public class AddRecordListener extends Observable implements ActionListener{
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-        DialogsFactory dialogsFactory = DialogsFactory.getInstance();
-        CommonDialog dialog = dialogsFactory.getDialog(menuName);
-        Map<String, String> fieldValues = dialog.getStringFields();
-
+        String s =  JOptionPane.showInputDialog(
+                MainFrame.getInstance().getMainFrame(),
+                "Введите id записи, которую хотите удалить",
+                "Удалить запись",
+                JOptionPane.PLAIN_MESSAGE);
         setChanged();
-        notifyObservers(fieldValues);
+        notifyObservers(Integer.parseInt(s));
 
-        dialog.clearTextFields();
     }
 }

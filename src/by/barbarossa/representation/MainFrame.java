@@ -17,8 +17,7 @@ public class MainFrame extends Observable{
     private MainFrame(){
 
         initFrame();
-        String[] headers = {"lol","kek","cheburek"};
-        tableView = new TableView(Arrays.asList(headers));
+        tableView = new TableView();
         tableName = new JLabel();
 
         mainFrame.setJMenuBar(createMenuBar());
@@ -64,5 +63,9 @@ public class MainFrame extends Observable{
 
     public TableView getTableView() {
         return tableView;
+    }
+
+    public JFrame getMainFrame() {
+        return mainFrame;
     }
 }

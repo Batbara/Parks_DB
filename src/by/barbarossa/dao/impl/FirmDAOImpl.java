@@ -14,16 +14,52 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class FirmDAOImpl implements ParksAndRecDAO {
+    private static final String url = "jdbc:mysql://localhost:3306/parks?autoReconnect=true&useSSL=false";
+    private static final String user = "root";
+    private static final String password = "leaf";
     private static Connection con;
     private static Statement stmt;
     private static ResultSet rs;
     private TablesDirector tablesDirector = new TablesDirector();
     @Override
-    public void insert() {
+    public void insert(Object o) {
+         Firm firm = (Firm)o;
+         Address address = firm.getAddress();
 
+        try {
+            con = DriverManager.getConnection(url, user, password);
+
+            String query = "INSERT INTO parks.address (city,street,buildingNum) VALUES (?,?,?)";
+            PreparedStatement statement = con.prepareStatement(query);
+           // statement.setInt(1,address.getId());
+            statement.setString(1,address.getCity());
+            statement.setString(2,address.getStreet());
+            statement.setInt(3,address.getBuildingNum());
+            statement.executeUpdate();
+
+            ResultSet rs = statement.executeQuery("SELECT LAST_INSERT_ID()");
+            int addrID = -1;
+            if (rs.next()) {
+                addrID = rs.getInt(1);
+            }
+
+            String firmQuery = "INSERT INTO parks.firm (firmName,idAddress) VALUES (?,?)";
+            statement = con.prepareStatement(firmQuery);
+            //statement.setInt(1,firm.getId());
+            statement.setString(1,firm.getName());
+            statement.setInt(2,addrID);
+            statement.executeUpdate();
+
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        } finally {
+            //close connection ,stmt and resultset here
+            try { con.close(); } catch(SQLException se) { /*can't do anything */ }
+            try { stmt.close(); } catch(SQLException se) { /*can't do anything */ }
+            try { rs.close(); } catch(SQLException se) { /*can't do anything */ }
+        }
     }
 
     @Override
@@ -72,26 +108,43 @@ public class FirmDAOImpl implements ParksAndRecDAO {
 
 
     @Override
-    public void delete() {
-
-    }
-
-    @Override
-    public void updateTable(String columnName, Object value, int row) {
-        final String url = "jdbc:mysql://localhost:3306/parks?autoReconnect=true&useSSL=false";
-        final String user = "root";
-        final String password = "leaf";
+    public void delete(int id) {
 
         Command command = tablesDirector.getCommand("firm");
 
-        String query = command.formStatement(columnName);
+        String query = command.formDeleteStatement(Integer.toString(id));
+        try {
+            con = DriverManager.getConnection(url, user, password);
+            PreparedStatement statement = con.prepareStatement(query);
+
+            statement.executeUpdate();
+
+
+
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        } finally {
+            //close connection ,stmt and resultset here
+            try { con.close(); } catch(SQLException se) { /*can't do anything */ }
+            try { stmt.close(); } catch(SQLException se) { /*can't do anything */ }
+            try { rs.close(); } catch(SQLException se) { /*can't do anything */ }
+        }
+    }
+
+    @Override
+    public void updateTable(String columnName, Object value, Object row) {
+
+
+        Command command = tablesDirector.getCommand("firm");
+
+        String query = command.formUpdateStatement(columnName);
 
         try {
             con = DriverManager.getConnection(url, user, password);
             PreparedStatement statement = con.prepareStatement(query);
 
             statement.setObject(1,value);
-            statement.setInt(2,row+1);
+            statement.setObject(2,row);
 
             statement.executeUpdate();
 

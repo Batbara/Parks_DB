@@ -26,18 +26,23 @@ public class EditTableListener extends Observable implements TableModelListener 
 
     @Override
     public void tableChanged(TableModelEvent e) {
-        int row = e.getFirstRow();
-        int column = e.getColumn();
-        TableModel model = (TableModel)e.getSource();
-        String columnName = model.getColumnName(column);
-        Object data = model.getValueAt(row, column);
+//        Object source = e.getSource();
+//        if(source instanceof )
+        if(e.getType()==TableModelEvent.UPDATE) {
+            System.out.println("table is changing");
+            int row = e.getFirstRow();
+            int column = e.getColumn();
+            TableModel model = (TableModel) e.getSource();
+            String columnName = model.getColumnName(column);
+            Object data = model.getValueAt(row, column);
 
-        Object[] dataToPass = new Object[3];
-        dataToPass[0] = columnName;
-        dataToPass[1] = data;
-        dataToPass[2] = row;
+            Object[] dataToPass = new Object[3];
+            dataToPass[0] = columnName;
+            dataToPass[1] = data;
+            dataToPass[2] = model.getValueAt(row,0);
 
-        setChanged();
-        notifyObservers(dataToPass);
+            setChanged();
+            notifyObservers(dataToPass);
+        }
     }
 }

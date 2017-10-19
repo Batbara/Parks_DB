@@ -19,10 +19,9 @@ public class TableView {
     private JTable table;
     private JPanel holder;
     private String tableName;
-    private List <String> header;
 
-    public TableView(List<String> header){
-        this.header = header;
+    public TableView(){
+
         initTable();
         JScrollPane tableScroll = new JScrollPane(table);
 
@@ -32,7 +31,7 @@ public class TableView {
     }
     private void initTable() {
         table =  new JTable();
-        DefaultTableModel tableModel = new DefaultTableModel(header.toArray(),0) {
+        DefaultTableModel tableModel = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column){
                 return false;
@@ -40,11 +39,11 @@ public class TableView {
         };
         table.setModel(tableModel);
 
-        for (String headerValue : header ){
+      /*  for (String headerValue : header ){
             TableColumnModel columnModel = table.getColumnModel();
             TableColumn column = columnModel.getColumn(header.indexOf(headerValue));
             column.setHeaderValue(headerValue);
-        }
+        }*/
         table.setRowSelectionAllowed(false);
         table.setFont(new Font("Helvetica", Font.PLAIN, 14));
 
@@ -54,17 +53,6 @@ public class TableView {
 
         table.setRowHeight(25);
         table.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
-       /* table.addFocusListener(new FocusAdapter() {
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                TableCellEditor tce = table.getCellEditor();
-                if(tce != null) {
-                    tce.stopCellEditing();
-                    tableModel.fireTableDataChanged();
-                }
-            }
-        });*/
 
     }
 
