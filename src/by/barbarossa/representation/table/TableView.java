@@ -26,11 +26,18 @@ public class TableView {
         JScrollPane tableScroll = new JScrollPane(table);
 
         holder = new JPanel();
+        holder.setPreferredSize(new Dimension(750,350));
+        holder.setMaximumSize(new Dimension(900,500));
         holder.setLayout(new BorderLayout());
         holder.add(tableScroll);
     }
     private void initTable() {
-        table =  new JTable();
+        table =  new JTable(){
+            public boolean getScrollableTracksViewportWidth()
+            {
+                return getPreferredSize().width < getParent().getWidth();
+            }
+        };
         DefaultTableModel tableModel = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column){
@@ -39,11 +46,6 @@ public class TableView {
         };
         table.setModel(tableModel);
 
-      /*  for (String headerValue : header ){
-            TableColumnModel columnModel = table.getColumnModel();
-            TableColumn column = columnModel.getColumn(header.indexOf(headerValue));
-            column.setHeaderValue(headerValue);
-        }*/
         table.setRowSelectionAllowed(false);
         table.setFont(new Font("Helvetica", Font.PLAIN, 14));
 
@@ -51,7 +53,7 @@ public class TableView {
         centerRenderer.setHorizontalAlignment( JLabel.CENTER );
         table.setDefaultRenderer(String.class, centerRenderer);
 
-        table.setRowHeight(25);
+        table.setRowHeight(20);
         table.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 
     }

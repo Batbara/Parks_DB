@@ -64,9 +64,6 @@ public class FirmDAOImpl implements ParksAndRecDAO {
 
     @Override
     public List<Firm> select() {
-         final String url = "jdbc:mysql://localhost:3306/parks?autoReconnect=true&useSSL=false";
-         final String user = "root";
-         final String password = "leaf";
         String query = "SELECT parks.firm.idfirm, parks.firm.firmname, parks.address.city, " +
                 "parks.address.street, parks.address.buildingNum" +
                 " FROM parks.firm INNER JOIN parks.address" +

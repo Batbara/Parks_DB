@@ -14,11 +14,9 @@ import by.barbarossa.service.impl.FirmService;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
@@ -69,7 +67,7 @@ public class FirmController implements Controller, Observer {
         }
     }
 
-    private void repaintTable() {
+    public void repaintTable() {
         List<Firm> result = firmService.select();
 
         String[] header = {"id", "Имя фирмы", "Город", "Улица", "Номер здания"};
@@ -94,15 +92,16 @@ public class FirmController implements Controller, Observer {
         tableModel.addTableModelListener(new EditTableListener("Фирма"));
     }
 
-    private void updateData(Object data) {
+    public void updateData(Object data) {
         Object[] dataArray = (Object[]) data;
         String columnName = (String) dataArray[0];
         Object value = dataArray[1];
         Object row = dataArray[2];
         firmService.updateTable(columnNameMap.get(columnName), value, row);
+        repaintTable();
     }
 
-    private void deleteRow(int id) {
+    public void deleteRow(int id) {
         firmService.delete(id);
         int rowNum = 0;
         DefaultTableModel tableModel = (DefaultTableModel) MainFrame.getInstance().getTable().getModel();
@@ -116,7 +115,7 @@ public class FirmController implements Controller, Observer {
         tableModel.removeRow(rowNum);
     }
 
-    private void addRecord(Map<String, String> record){
+    public void addRecord(Map<String, String> record){
         Firm firm = new Firm();
         firm.setInfo(record);
         firmService.insert(firm);
