@@ -33,11 +33,16 @@ public class PlantTable implements Command {
 
     @Override
     public String formDeleteStatement(String arg) {
-        return null;
+        return "DELETE FROM parks.plant WHERE parks.plant.idplant = "+arg;
     }
 
     @Override
     public String formInsertStatement(String arg) {
+        /*for(String addrColumn : addressColumns){
+            if(arg.equals(addrColumn))
+                return "UPDATE parks.address SET " + arg + " = ? WHERE parks.address.idaddress = ?";
+        }
+        return "UPDATE parks.firm SET " + arg + " = ? WHERE parks.firm.idfirm = ?";*/
         return null;
     }
     private boolean isPlantColumn(String arg){

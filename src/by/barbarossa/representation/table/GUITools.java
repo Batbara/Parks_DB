@@ -40,6 +40,15 @@ public class GUITools {
         }
         return fields;
     }
+    public static Map<JLabel, JComboBox> createComboBox(String labelName, List<String> values) {
+
+        Map<JLabel, JComboBox> comboboxMap = new LinkedHashMap<>();
+
+        JComboBox box = new JComboBox(values.toArray());
+        JLabel label = new JLabel(labelName);
+        comboboxMap.put(label,box);
+        return comboboxMap;
+    }
 
     public static void setColumnWidth(JTable table, int width) {
         for (int col = 0; col < table.getColumnCount(); col++) {

@@ -31,7 +31,90 @@ public class PlantDAOImpl implements ParksAndRecDAO{
     private TablesDirector tablesDirector = new TablesDirector();
     @Override
     public void insert(Object o) {
+        Plant plant = (Plant) o;
+        Watering watering = plant.getWatering();
+        ParkZone parkZone = plant.getZone();
 
+        try {
+            con = DriverManager.getConnection(url, user, password);
+
+            String query = "INSERT INTO parks.watering (periodicity, waterNorm) VALUES (?,?) " +
+                    " ON DUPLICATE KEY UPDATE idWatering=LAST_INSERT_ID()+1";
+            PreparedStatement statement = con.prepareStatement(query);
+            // statement.setInt(1,address.getId());
+            statement.setString(1,watering.getPeriodicity());
+            statement.setInt(2,watering.getWaterNorm());
+            statement.executeUpdate();
+
+            ResultSet rs = statement.executeQuery("SELECT LAST_INSERT_ID()");
+            int wateringID = -1;
+            if (rs.next()) {
+                wateringID = rs.getInt(1);
+            }
+
+           int zoneID = getZoneID(parkZone);
+            String firmQuery = "INSERT INTO parks.plant (idZone, species,age,idWatering,plantingDate) VALUES (?,?,?,?,?)";
+            statement = con.prepareStatement(firmQuery);
+            //statement.setInt(1,firm.getId());
+            statement.setInt(1,zoneID);
+            statement.setString(2,plant.getSpecies());
+            statement.setInt(3,plant.getAge());
+            statement.setInt(4,wateringID);
+            statement.setDate(5,new java.sql.Date(plant.getPlantDate().getTime()));
+            statement.executeUpdate();
+
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        } finally {
+            try { con.close(); } catch(SQLException se) { }
+            try { stmt.close(); } catch(SQLException se) {  }
+            try { rs.close(); } catch(SQLException se) {  }
+        }
+    }
+
+    private int getZoneID(ParkZone parkZone) {
+        try {
+            con = DriverManager.getConnection(url, user, password);
+            String selectZoneIDStatement = "SELECT parks.zone.idZone FROM parks.zone WHERE zoneName = \""
+                    + parkZone.getZoneName() + "\"";
+            ResultSet rs = con.createStatement().executeQuery(selectZoneIDStatement);
+            int zoneID = -1;
+            while (rs.next()) {
+                zoneID = rs.getInt(1);
+            }
+            return zoneID;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return -1;
+    }
+
+    public List<String> getZonesInfo(){
+        String query = "SELECT DISTINCT parks.zone.zoneName FROM" +
+                "(parks.plant INNER JOIN parks.zone ON (parks.plant.idZone = parks.zone.idzone)) ";
+        try {
+            con = DriverManager.getConnection(url, user, password);
+            stmt = con.createStatement();
+
+            rs = stmt.executeQuery(query);
+
+            List<String> zoneNames = new ArrayList<>();
+            while (rs.next()){
+
+                String zoneName = rs.getString(1);
+                zoneNames.add(zoneName);
+            }
+            return zoneNames;
+
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        } finally {
+            try { con.close(); } catch(SQLException se) { /*can't do anything */ }
+            try { stmt.close(); } catch(SQLException se) { /*can't do anything */ }
+            try { rs.close(); } catch(SQLException se) { /*can't do anything */ }
+        }
+        return null;
     }
 
     @Override
@@ -79,7 +162,22 @@ public class PlantDAOImpl implements ParksAndRecDAO{
 
     @Override
     public void delete(int id) {
+        Command command = tablesDirector.getCommand("plant");
 
+        String query = command.formDeleteStatement(Integer.toString(id));
+        try {
+            con = DriverManager.getConnection(url, user, password);
+            PreparedStatement statement = con.prepareStatement(query);
+
+            statement.executeUpdate();
+
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        } finally {
+            try { con.close(); } catch(SQLException se) { /*can't do anything */ }
+            try { stmt.close(); } catch(SQLException se) { /*can't do anything */ }
+            try { rs.close(); } catch(SQLException se) { /*can't do anything */ }
+        }
     }
 
     @Override

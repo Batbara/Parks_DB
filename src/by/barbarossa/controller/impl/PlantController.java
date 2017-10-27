@@ -4,7 +4,12 @@ import by.barbarossa.controller.Controller;
 import by.barbarossa.entity.Firm;
 import by.barbarossa.entity.Plant;
 import by.barbarossa.representation.MainFrame;
+import by.barbarossa.representation.dialogs.DialogsFactory;
+import by.barbarossa.representation.dialogs.impl.AddToPlantDialog;
+import by.barbarossa.representation.listeners.AddRecordListener;
+import by.barbarossa.representation.listeners.DeleteRecordListener;
 import by.barbarossa.representation.listeners.EditTableListener;
+import by.barbarossa.representation.listeners.ShowDialogListener;
 import by.barbarossa.representation.listeners.ViewTableListener;
 import by.barbarossa.representation.table.GUITools;
 import by.barbarossa.representation.table.TableView;
@@ -14,6 +19,7 @@ import by.barbarossa.service.impl.PlantService;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -22,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Vector;
 
 public class PlantController implements Observer, Controller {
     private ServiceFactory factory = ServiceFactory.getInstance();
@@ -51,7 +58,18 @@ public class PlantController implements Observer, Controller {
         }
         if (o instanceof EditTableListener) {
             updateData(arg);
-
+        }
+        if(o instanceof DeleteRecordListener){
+            deleteRow((int)arg);
+        }
+        if(o instanceof ShowDialogListener){
+            sendZoneInfo();
+        }
+        if (o instanceof AddRecordListener){
+            if(arg instanceof Map) {
+                Map<String,String> argMap = (Map<String, String>)arg;
+                addRecord(argMap);
+            }
         }
     }
 
@@ -101,12 +119,46 @@ public class PlantController implements Observer, Controller {
 
     @Override
     public void deleteRow(int id) {
-
+        plantService.delete(id);
+        int rowNum = 0;
+        DefaultTableModel tableModel = (DefaultTableModel) MainFrame.getInstance().getTable().getModel();
+        for (int row = 0; row < tableModel.getRowCount(); row++) {
+            String value = tableModel.getValueAt(row, 0).toString();
+            if (Integer.parseInt(value) == id) {
+                rowNum = row;
+                break;
+            }
+        }
+        tableModel.removeRow(rowNum);
+    }
+    public void sendZoneInfo(){
+        List<String> zonesInfo = plantService.getZonesInfo();
+        DialogsFactory dialogsFactory = DialogsFactory.getInstance();
+        AddToPlantDialog addToPlantDialog = (AddToPlantDialog)dialogsFactory.getDialog("Растения");
+        addToPlantDialog.setZonesInfo(zonesInfo);
     }
 
     @Override
     public void addRecord(Map<String, String> record) {
+        Plant plant = new Plant();
+        try {
+            plant.setInfo(record);
+        } catch (ParseException e) {
+            JOptionPane.showMessageDialog(MainFrame.getInstance().getMainFrame(),
+                    "Некорректная дата!",
+                    "Ошибка ввода",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        plantService.insert(plant);
 
+        DefaultTableModel tableModel = (DefaultTableModel) MainFrame.getInstance().getTable().getModel();
+        List<String> values = new ArrayList<>();
+        values.add(Integer.toString(tableModel.getRowCount()+1));
+        for (String key : record.keySet()){
+            values.add(record.get(key));
+        }
+        tableModel.addRow(new Vector(values));
     }
 
 
