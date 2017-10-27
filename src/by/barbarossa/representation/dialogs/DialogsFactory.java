@@ -1,12 +1,14 @@
 package by.barbarossa.representation.dialogs;
 
 import by.barbarossa.representation.dialogs.impl.AddToFirmDialog;
+import by.barbarossa.representation.dialogs.impl.AddToParksDialog;
 import by.barbarossa.representation.dialogs.impl.AddToPlantDialog;
 
 public class DialogsFactory {
     private static final DialogsFactory instance = new DialogsFactory();
     private static CommonDialog addToFirmDialog = new AddToFirmDialog();
     private static CommonDialog addToPlantDialog = new AddToPlantDialog();
+    private static CommonDialog addToParksDialog = new AddToParksDialog();
     public static DialogsFactory getInstance(){return instance;}
 
     private DialogsFactory(){}
@@ -16,6 +18,8 @@ public class DialogsFactory {
                 return addToFirmDialog;
             case "Растения":
                 return addToPlantDialog;
+            case "Парки и зоны":
+                return addToParksDialog;
         }
         return null;
     }

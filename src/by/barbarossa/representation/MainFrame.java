@@ -36,7 +36,7 @@ public class MainFrame extends Observable{
     }
     private JMenuBar createMenuBar(){
         JMenuBar menuBar = new JMenuBar();
-        String[] menuNames = {"Фирма", "Парки", "Растения"};
+        String[] menuNames = {"Фирма", "Парки и зоны", "Растения"};
         for (String menuName : menuNames){
             menuBar.add(new Menu(menuName).getMenu());
         }

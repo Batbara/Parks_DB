@@ -17,7 +17,7 @@ public class EditTableListener extends Observable implements TableModelListener 
         ControllerFactory factory = ControllerFactory.getInstance();
         Controller controller = factory.getController(tableName);
 
-        if (tableName.equals("Фирма") || tableName.equals("Растения")) {
+        if (tableName.equals("Фирма") || tableName.equals("Растения") || tableName.equals("Парки и зоны")) {
             // FirmController firmController = (FirmController) factory.getController("firm");
             //this.menuName = menuName;
             this.addObserver(controller);
