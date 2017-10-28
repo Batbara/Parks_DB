@@ -74,16 +74,6 @@ public class AddToParksDialog extends CommonDialog{
 
     }
     @Override
-    public void show() {
-        this.dialog.setVisible(true);
-    }
-
-    @Override
-    public void hide() {
-        this.dialog.setVisible(false);
-    }
-
-    @Override
     public void addButtonListener() {
         this.confirmButton.addActionListener(new AddRecordListener("Парки и зоны"));
     }

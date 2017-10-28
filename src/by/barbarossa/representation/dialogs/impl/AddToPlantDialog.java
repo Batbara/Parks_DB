@@ -62,15 +62,6 @@ public class AddToPlantDialog extends CommonDialog{
 
         fields = GUITools.createFields(labels);
     }
-    @Override
-    public void show() {
-        this.dialog.setVisible(true);
-    }
-
-    @Override
-    public void hide() {
-        this.dialog.setVisible(false);
-    }
 
     @Override
     public void addButtonListener() {

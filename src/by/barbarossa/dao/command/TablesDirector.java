@@ -9,6 +9,7 @@ public class TablesDirector {
         commandMap.put("firm", new FirmTable());
         commandMap.put("plant", new PlantTable());
         commandMap.put("parks", new ParksTable());
+        commandMap.put("decorator", new ParkDecoratorTable());
     }
     public Command getCommand(String tableName){
         return commandMap.get(tableName);

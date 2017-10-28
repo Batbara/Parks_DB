@@ -21,8 +21,10 @@ public abstract class CommonDialog{
         confirmButton = new JButton("ОК");
     }
 
-    public abstract void show();
-    public abstract void hide();
+    public void show(){
+        dialog.setVisible(true);
+    };
+
     public abstract void addButtonListener();
 
     public Map<JLabel, JTextField> getFields() {

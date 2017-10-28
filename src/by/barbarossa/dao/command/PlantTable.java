@@ -37,14 +37,18 @@ public class PlantTable implements Command {
     }
 
     @Override
-    public String formInsertStatement(String arg) {
-        /*for(String addrColumn : addressColumns){
-            if(arg.equals(addrColumn))
-                return "UPDATE parks.address SET " + arg + " = ? WHERE parks.address.idaddress = ?";
+    public String formIDStatement(String arg, Object primaryID) {
+        if(isWateringColumn(arg)){
+            return "SELECT parks.watering.idWatering FROM parks.plant INNER JOIN parks.watering ON " +
+                    "parks.plant.idWatering = parks.watering.idwatering WHERE parks.plant.idPlant = "+primaryID.toString();
         }
-        return "UPDATE parks.firm SET " + arg + " = ? WHERE parks.firm.idfirm = ?";*/
+        if(isZoneColumn(arg)){
+            return "SELECT parks.zone.idzone FROM parks.plant INNER JOIN parks.zone ON " +
+                    "parks.plant.idzone = parks.zone.idzone WHERE parks.plant.idPlant = "+primaryID.toString();
+        }
         return null;
     }
+
     private boolean isPlantColumn(String arg){
         for (String name : plantColumns){
             if(name.equals(arg))

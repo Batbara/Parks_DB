@@ -1,15 +1,16 @@
 package by.barbarossa.entity;
 
 public abstract class Employee {
-    private Name name;
-    private String phoneNum;
-    private Address homeAddress;
+    protected String name;
+    protected String phoneNum;
+    protected Address address = new Address();
+    protected int id;
 
-    public Name getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(Name name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -21,11 +22,19 @@ public abstract class Employee {
         this.phoneNum = phoneNum;
     }
 
-    public Address getHomeAddress() {
-        return homeAddress;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setHomeAddress(Address homeAddress) {
-        this.homeAddress = homeAddress;
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

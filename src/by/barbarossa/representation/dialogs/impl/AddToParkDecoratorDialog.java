@@ -6,10 +6,9 @@ import by.barbarossa.representation.table.GUITools;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Map;
 
-public class AddToFirmDialog extends CommonDialog{
-    public AddToFirmDialog(){
+public class AddToParkDecoratorDialog extends CommonDialog {
+    public AddToParkDecoratorDialog(){
         super();
         initFields();
 
@@ -20,20 +19,11 @@ public class AddToFirmDialog extends CommonDialog{
         dialog.pack();
     }
     private void initFields(){
-        String[] labels = {"Название", "Город", "Улица", "Номер здания"};
+        String[] labels = {"Имя", "Город", "Улица", "Номер здания", "Образование",
+                "Альма-матер", "Телефон","Категория"};
 
         fields = GUITools.createFields(labels);
     }
-    @Override
-    public void show() {
-        this.dialog.setVisible(true);
-    }
-
-    @Override
-    public void addButtonListener() {
-        this.confirmButton.addActionListener(new AddRecordListener("Фирма"));
-    }
-
     private JPanel getFieldsPanel(){
 
         JPanel container = new JPanel(new GridLayout(fields.size(),2));
@@ -45,11 +35,8 @@ public class AddToFirmDialog extends CommonDialog{
 
     }
 
-    public Map<JLabel, JTextField> getFields() {
-        return fields;
-    }
-
-    public void setFields(Map<JLabel, JTextField> fields) {
-        this.fields = fields;
+    @Override
+    public void addButtonListener() {
+        this.confirmButton.addActionListener(new AddRecordListener("Декораторы парка"));
     }
 }

@@ -133,11 +133,9 @@ public class ParksDAOImpl implements ParksAndRecDAO {
         Command command = tablesDirector.getCommand("parks");
 
         String query = command.formUpdateStatement(columnName);
-
+        String parkIDQuery = command.formIDStatement(columnName,row);
         try {
             con = DriverManager.getConnection(url, user, password);
-            ParksTable parksTable = (ParksTable) command;
-            String parkIDQuery = parksTable.getParkIDQuery(columnName,row);
             Object id;
             if(parkIDQuery!=null){
                 Statement s = con.createStatement();

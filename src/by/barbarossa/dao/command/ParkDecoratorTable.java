@@ -1,6 +1,7 @@
 package by.barbarossa.dao.command;
 
-public class FirmTable implements Command {
+public class ParkDecoratorTable implements Command {
+
     private String[] addressColumns = {"city","street","buildingNum"};
     @Override
     public String formUpdateStatement(String arg) {
@@ -8,20 +9,20 @@ public class FirmTable implements Command {
             if(arg.equals(addrColumn))
                 return "UPDATE parks.address SET " + arg + " = ? WHERE parks.address.idaddress = ?";
         }
-        return "UPDATE parks.firm SET " + arg + " = ? WHERE parks.firm.idfirm = ?";
+        return "UPDATE parks.parkdecorator SET " + arg + " = ? WHERE parks.parkdecorator.idparkdecorator = ?";
     }
 
     @Override
     public String formDeleteStatement(String arg) {
-        return "DELETE FROM parks.firm WHERE parks.firm.idfirm = "+arg;
-
+        return "DELETE FROM parks.parkdecorator WHERE parks.parkdecorator.idparkdecorator = "+arg;
     }
 
     @Override
     public String formIDStatement(String arg, Object primaryID) {
         if(isAddrColumn(arg)){
-            return "SELECT parks.address.idAddress FROM parks.firm INNER JOIN parks.address ON " +
-                    "parks.address.idAddress = parks.firm.idAddress WHERE parks.firm.idfirm = "+primaryID.toString();
+            return "SELECT parks.address.idAddress FROM parks.parkdecorator INNER JOIN parks.address ON " +
+                    "parks.address.idAddress = parks.parkdecorator.idAddress " +
+                    "WHERE parks.parkdecorator.idparkdecorator = "+primaryID.toString();
         }
         return null;
     }
@@ -34,5 +35,4 @@ public class FirmTable implements Command {
         }
         return false;
     }
-
 }

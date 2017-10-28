@@ -185,12 +185,10 @@ public class PlantDAOImpl implements ParksAndRecDAO{
         Command command = tablesDirector.getCommand("plant");
 
         String query = command.formUpdateStatement(columnName);
-
+        String idDefiningQuery = command.formIDStatement(columnName,row);
         try {
             con = DriverManager.getConnection(url, user, password);
 
-            PlantTable plantTable = (PlantTable)command;
-            String idDefiningQuery = plantTable.getIdQuery(columnName,row);
             Object id;
             if(idDefiningQuery!=null){
                 Statement s = con.createStatement();

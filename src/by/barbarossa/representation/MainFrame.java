@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Observable;
 
 public class MainFrame extends Observable{
@@ -14,19 +16,32 @@ public class MainFrame extends Observable{
     public static MainFrame getInstance(){return instance;}
     private TableView tableView;
     private JLabel tableName;
+    private Map<String, JButton> controlButtons;
     private MainFrame(){
 
         initFrame();
         tableView = new TableView();
         tableName = new JLabel();
 
+        initButtons();
         mainFrame.setJMenuBar(createMenuBar());
         mainFrame.add(tableName, BorderLayout.PAGE_START);
         mainFrame.add(tableView.getHolder(), BorderLayout.CENTER);
+        mainFrame.add(getButtonsPanel(),BorderLayout.PAGE_END);
         mainFrame.pack();
         mainFrame.setLocationRelativeTo(null);
 
     }
+
+    private JPanel getButtonsPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel,BoxLayout.LINE_AXIS));
+        for(String key : controlButtons.keySet()){
+            panel.add(controlButtons.get(key));
+        }
+        return panel;
+    }
+
     private void initFrame(){
         mainFrame = new JFrame("Парки и зоны отдыха");
         mainFrame.setLayout(new BorderLayout(0,10));
@@ -42,7 +57,7 @@ public class MainFrame extends Observable{
         }
 
         JMenu workers = new JMenu("Работники");
-        String[] subMenuNames = {"Cлужитель", "Декоратор парка"};
+        String[] subMenuNames = {"Служитель", "Декораторы парка"};
         for (String subMenuName : subMenuNames){
             workers.add(new Menu(subMenuName).getMenu());
         }
@@ -67,5 +82,12 @@ public class MainFrame extends Observable{
 
     public JFrame getMainFrame() {
         return mainFrame;
+    }
+    private void initButtons(){
+        controlButtons = new HashMap<>();
+        String[] buttonsNames = {"Обновить", "Насаждения","Сотрудники на дату","Растения на дату"};
+        for(String name : buttonsNames){
+            controlButtons.put(name, new JButton(name));
+        }
     }
 }

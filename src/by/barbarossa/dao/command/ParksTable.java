@@ -10,14 +10,6 @@ public class ParksTable implements Command {
             return "UPDATE parks.park SET parkName = ? WHERE parks.park.idPark = ?";
         }
     }
-    public String getParkIDQuery(String arg, Object zoneID){
-
-        if(isParkColumn(arg)){
-            return "SELECT parks.park.idPark FROM parks.park INNER JOIN parks.zone ON " +
-                    "parks.park.idPark = parks.zone.idPark WHERE parks.zone.idZone = "+zoneID.toString();
-        }
-        return null;
-    }
 
     private boolean isParkColumn(String arg) {
         for (String name : parkColumns){
@@ -33,7 +25,13 @@ public class ParksTable implements Command {
     }
 
     @Override
-    public String formInsertStatement(String arg) {
+    public String formIDStatement(String arg, Object primaryID) {
+
+        if(isParkColumn(arg)){
+            return "SELECT parks.park.idPark FROM parks.park INNER JOIN parks.zone ON " +
+                    "parks.park.idPark = parks.zone.idPark WHERE parks.zone.idZone = "+primaryID.toString();
+        }
         return null;
     }
+
 }

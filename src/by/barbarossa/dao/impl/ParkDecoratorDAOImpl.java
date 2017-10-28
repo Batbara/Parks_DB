@@ -4,7 +4,7 @@ import by.barbarossa.dao.ParksAndRecDAO;
 import by.barbarossa.dao.command.Command;
 import by.barbarossa.dao.command.TablesDirector;
 import by.barbarossa.entity.Address;
-import by.barbarossa.entity.Firm;
+import by.barbarossa.entity.ParkDecorator;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,7 +15,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FirmDAOImpl implements ParksAndRecDAO {
+public class ParkDecoratorDAOImpl implements ParksAndRecDAO{
     private static final String url = "jdbc:mysql://localhost:3306/parks?autoReconnect=true&useSSL=false";
     private static final String user = "root";
     private static final String password = "leaf";
@@ -25,15 +25,14 @@ public class FirmDAOImpl implements ParksAndRecDAO {
     private TablesDirector tablesDirector = new TablesDirector();
     @Override
     public void insert(Object o) {
-         Firm firm = (Firm)o;
-         Address address = firm.getAddress();
+        ParkDecorator parkDecorator = (ParkDecorator) o;
+        Address address = parkDecorator.getAddress();
 
         try {
             con = DriverManager.getConnection(url, user, password);
 
             String query = "INSERT INTO parks.address (city,street,buildingNum) VALUES (?,?,?)";
             PreparedStatement statement = con.prepareStatement(query);
-           // statement.setInt(1,address.getId());
             statement.setString(1,address.getCity());
             statement.setString(2,address.getStreet());
             statement.setInt(3,address.getBuildingNum());
@@ -45,11 +44,15 @@ public class FirmDAOImpl implements ParksAndRecDAO {
                 addrID = rs.getInt(1);
             }
 
-            String firmQuery = "INSERT INTO parks.firm (firmName,idAddress) VALUES (?,?)";
+            String firmQuery = "INSERT INTO parks.parkdecorator (parkdecoratorName," +
+                    "idAddress, education, almamater, phonenumber,category) VALUES (?,?,?,?,?,?)";
             statement = con.prepareStatement(firmQuery);
-            //statement.setInt(1,firm.getId());
-            statement.setString(1,firm.getName());
+            statement.setString(1,parkDecorator.getName());
             statement.setInt(2,addrID);
+            statement.setString(3,parkDecorator.getEducation());
+            statement.setString(4,parkDecorator.getAlmaMater());
+            statement.setString(5,parkDecorator.getPhoneNum());
+            statement.setString(6,parkDecorator.getCategory());
             statement.executeUpdate();
 
         } catch (SQLException sqlEx) {
@@ -63,34 +66,41 @@ public class FirmDAOImpl implements ParksAndRecDAO {
     }
 
     @Override
-    public List<Firm> select() {
-        String query = "SELECT parks.firm.idfirm, parks.firm.firmname, parks.address.city, " +
-                "parks.address.street, parks.address.buildingNum" +
-                " FROM parks.firm INNER JOIN parks.address" +
-                " ON parks.firm.idAddress = parks.address.idaddress";
+    public List<ParkDecorator> select() {
+        String query = "SELECT parks.parkdecorator.idparkdecorator, parks.parkdecorator.parkdecoratorname, " +
+                "parks.address.city, parks.address.street, parks.address.buildingNum," +
+                "parks.parkdecorator.education, parks.parkdecorator.almamater, " +
+                "parks.parkdecorator.phonenumber, parks.parkdecorator.category" +
+                " FROM parks.parkdecorator INNER JOIN parks.address" +
+                " ON parks.parkdecorator.idAddress = parks.address.idaddress";
 
         try {
-             con = DriverManager.getConnection(url, user, password);
-             stmt = con.createStatement();
+            con = DriverManager.getConnection(url, user, password);
+            stmt = con.createStatement();
 
-             rs = stmt.executeQuery(query);
+            rs = stmt.executeQuery(query);
 
-            List<Firm> firms = new ArrayList<>();
+            List<ParkDecorator> parkDecorators = new ArrayList<>();
             while (rs.next()){
-                Firm firm = new Firm();
+                ParkDecorator parkDecorator = new ParkDecorator();
 
-                firm.setId(rs.getInt(1));
-                firm.setName(rs.getString(2));
+                parkDecorator.setId(rs.getInt(1));
+                parkDecorator.setName(rs.getString(2));
 
                 Address address =  new Address();
                 address.setCity(rs.getString(3));
                 address.setStreet(rs.getString(4));
                 address.setBuildingNum(rs.getInt(5));
 
-                firm.setAddress(address);
-                firms.add(firm);
+                parkDecorator.setEducation(rs.getString(6));
+                parkDecorator.setAlmaMater(rs.getString(7));
+                parkDecorator.setPhoneNum(rs.getString(8));
+                parkDecorator.setCategory(rs.getString(9));
+
+                parkDecorator.setAddress(address);
+                parkDecorators.add(parkDecorator);
             }
-            return firms;
+            return parkDecorators;
 
         } catch (SQLException sqlEx) {
             sqlEx.printStackTrace();
@@ -103,11 +113,9 @@ public class FirmDAOImpl implements ParksAndRecDAO {
         return null;
     }
 
-
     @Override
     public void delete(int id) {
-
-        Command command = tablesDirector.getCommand("firm");
+        Command command = tablesDirector.getCommand("decorator");
 
         String query = command.formDeleteStatement(Integer.toString(id));
         try {
@@ -116,12 +124,9 @@ public class FirmDAOImpl implements ParksAndRecDAO {
 
             statement.executeUpdate();
 
-
-
         } catch (SQLException sqlEx) {
             sqlEx.printStackTrace();
         } finally {
-            //close connection ,stmt and resultset here
             try { con.close(); } catch(SQLException se) { /*can't do anything */ }
             try { stmt.close(); } catch(SQLException se) { /*can't do anything */ }
             try { rs.close(); } catch(SQLException se) { /*can't do anything */ }
@@ -131,17 +136,16 @@ public class FirmDAOImpl implements ParksAndRecDAO {
     @Override
     public void updateTable(String columnName, Object value, Object row) {
 
-
-        Command command = tablesDirector.getCommand("firm");
+        Command command = tablesDirector.getCommand("decorator");
 
         String query = command.formUpdateStatement(columnName);
         String idQuery = command.formIDStatement(columnName,row);
         try {
+
             con = DriverManager.getConnection(url, user, password);
             Object id;
             if(idQuery!=null){
-                Statement s = con.createStatement();
-                ResultSet rs = s.executeQuery(idQuery);
+                ResultSet rs = con.createStatement().executeQuery(idQuery);
                 rs.next();
                 id = rs.getInt(1);
             } else{
@@ -154,7 +158,6 @@ public class FirmDAOImpl implements ParksAndRecDAO {
 
             statement.executeUpdate();
 
-
         } catch (SQLException sqlEx) {
             sqlEx.printStackTrace();
         } finally {
@@ -163,5 +166,6 @@ public class FirmDAOImpl implements ParksAndRecDAO {
             try { stmt.close(); } catch(SQLException se) { /*can't do anything */ }
             try { rs.close(); } catch(SQLException se) { /*can't do anything */ }
         }
+
     }
 }
