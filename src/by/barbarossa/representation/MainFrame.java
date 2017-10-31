@@ -1,14 +1,11 @@
 package by.barbarossa.representation;
 
 import by.barbarossa.representation.listeners.ShowSpeciesInfo;
+import by.barbarossa.representation.listeners.ShowOnDate;
 import by.barbarossa.representation.table.TableView;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
@@ -39,10 +36,21 @@ public class MainFrame extends Observable{
 
     private void addButtonsListeners() {
         for(String buttonName : controlButtons.keySet()){
+            JButton button = controlButtons.get(buttonName);
+
             switch (buttonName){
                 case "Насаждения":
-                    JButton button = controlButtons.get(buttonName);
+
                     button.addActionListener(new ShowSpeciesInfo());
+                    break;
+                case "Сотрудники на дату":
+                    button.setActionCommand("workers");
+                    button.addActionListener(new ShowOnDate());
+                    break;
+                case "Растения на дату":
+                    button.setActionCommand("plants");
+                    button.addActionListener(new ShowOnDate());
+                    break;
             }
         }
     }

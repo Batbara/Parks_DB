@@ -6,6 +6,7 @@ import by.barbarossa.representation.listeners.ViewTableListener;
 
 import javax.swing.*;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Menu {
@@ -22,8 +23,8 @@ public class Menu {
 
     }
     private void initMenuItems(){
-        menuItems = new HashMap<>();
-        String[] itemNames = {"Показать", "Добавить", "Удалить"};
+        menuItems = new LinkedHashMap<>();
+        String[] itemNames = { "Показать","Добавить","Удалить"};
         for(String itemName : itemNames){
             menuItems.put(itemName,new JMenuItem(itemName));
         }

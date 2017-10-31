@@ -10,13 +10,39 @@ public class Schedule {
     private Date date;
     private Plant plant;
 
-    public List<String> getInfo(){
+    public Schedule() {
+        plantWorker = new PlantWorker();
+        date = new Date();
+        plant = new Plant();
+    }
+
+    public List<String> getInfo(String type) {
+
         List<String> info = new ArrayList<>();
-        info.add(Integer.toString(id));
-        info.add(plantWorker.getName());
-        info.add(date.toString());
-        info.add(plant.getSpecies());
-        return info;
+        if (type.equals("workersondate")) {
+
+            info.add(plantWorker.getName());
+            info.add(plantWorker.phoneNum);
+            info.add(date.toString());
+            return info;
+        }
+
+        if(type.equals("plantsondate")){
+            info.add(plant.getSpecies());
+            info.add(plant.getWatering().getPeriodicity());
+            int waterNorm = plant.getWatering().getWaterNorm();
+            info.add(Integer.toString(waterNorm));
+            info.add(date.toString());
+            return info;
+        }
+        if(type.equals("select")) {
+            info.add(Integer.toString(id));
+            info.add(plantWorker.getName());
+            info.add(date.toString());
+            info.add(plant.getSpecies());
+            return info;
+        }
+        return null;
     }
 
     public int getId() {

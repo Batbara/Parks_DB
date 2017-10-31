@@ -2,6 +2,8 @@ package by.barbarossa.service.impl;
 
 import by.barbarossa.dao.DAOFactory;
 import by.barbarossa.dao.ParksAndRecDAO;
+import by.barbarossa.dao.impl.ScheduleDAOImpl;
+import by.barbarossa.entity.Schedule;
 import by.barbarossa.service.ParksAndRecService;
 import by.barbarossa.service.ServiceFactory;
 
@@ -17,6 +19,21 @@ public class ScheduleService implements ParksAndRecService{
 
     }
 
+    public List<Schedule> showWorkers(Object arg){
+        DAOFactory daoFactory = DAOFactory.getInstance();
+        ScheduleDAOImpl scheduleDAO = (ScheduleDAOImpl)daoFactory.getDAO("schedule");
+        return scheduleDAO.showWorkers(arg);
+    }
+    public List<Schedule> showPlants(Object arg){
+        DAOFactory daoFactory = DAOFactory.getInstance();
+        ScheduleDAOImpl scheduleDAO = (ScheduleDAOImpl)daoFactory.getDAO("schedule");
+        return scheduleDAO.showPlants(arg);
+    }
+    public List<String> getDateInfo(){
+        DAOFactory daoFactory = DAOFactory.getInstance();
+        ScheduleDAOImpl scheduleDAO = (ScheduleDAOImpl)daoFactory.getDAO("schedule");
+        return scheduleDAO.getDateInfo();
+    }
     @Override
     public List select() {
 
