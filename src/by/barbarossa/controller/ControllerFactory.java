@@ -4,16 +4,20 @@ import by.barbarossa.controller.impl.FirmController;
 import by.barbarossa.controller.impl.ParkDecoratorController;
 import by.barbarossa.controller.impl.ParksController;
 import by.barbarossa.controller.impl.PlantController;
+import by.barbarossa.controller.impl.PlantWorkerController;
+import by.barbarossa.controller.impl.ScheduleController;
 import by.barbarossa.entity.ParkDecorator;
 
 public class ControllerFactory {
     private static final ControllerFactory instance = new ControllerFactory();
     public static final ControllerFactory getInstance(){return instance;}
 
-    private static FirmController firmController = new FirmController();
-    private static PlantController plantController = new PlantController();
-    private static ParksController parksController = new ParksController();
-    private static ParkDecoratorController parkDecoratorController = new ParkDecoratorController();
+    private static Controller firmController = new FirmController();
+    private static Controller plantController = new PlantController();
+    private static Controller parksController = new ParksController();
+    private static Controller parkDecoratorController = new ParkDecoratorController();
+    private static Controller pWorkerController = new PlantWorkerController();
+    private static Controller scheduleController = new ScheduleController();
     private ControllerFactory(){}
     public Controller getController(String name){
         switch (name){
@@ -25,6 +29,10 @@ public class ControllerFactory {
                 return parksController;
             case "Декораторы парка":
                 return parkDecoratorController;
+            case "Служитель":
+                return pWorkerController;
+            case "График":
+                return scheduleController;
         }
         return null;
     }

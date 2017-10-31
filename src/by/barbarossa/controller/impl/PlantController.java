@@ -10,6 +10,7 @@ import by.barbarossa.representation.listeners.AddRecordListener;
 import by.barbarossa.representation.listeners.DeleteRecordListener;
 import by.barbarossa.representation.listeners.EditTableListener;
 import by.barbarossa.representation.listeners.ShowDialogListener;
+import by.barbarossa.representation.listeners.ShowSpeciesInfo;
 import by.barbarossa.representation.listeners.ViewTableListener;
 import by.barbarossa.representation.table.GUITools;
 import by.barbarossa.representation.table.TableView;
@@ -71,13 +72,31 @@ public class PlantController implements Observer, Controller {
                 addRecord(argMap);
             }
         }
+        if(o instanceof ShowSpeciesInfo){
+            showSpeciesInfo();
+        }
     }
 
+    private void showSpeciesInfo(){
+        List<String> speciesInfo = plantService.getPlantSpecies();
+        String s = (String)JOptionPane.showInputDialog(
+                MainFrame.getInstance().getMainFrame(),
+                "Выберите вид растения:\n",
+                "Вид",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                speciesInfo.toArray(),
+                null);
+        List<Plant> plants = plantService.showInfo(s);
+
+        repaintTable(plants);
+    }
     @Override
     public void repaintTable() {
         List<Plant> result = plantService.select();
-
-
+        repaintTable(result);
+    }
+    private void repaintTable(List<Plant> result){
         String[] header = {"id", "Имя зоны", "Вид", "Возраст", "Дата высадки", "Периодичность", "Норма воды"};
         List<String> headers = Arrays.asList(header);
 

@@ -159,7 +159,49 @@ public class PlantDAOImpl implements ParksAndRecDAO{
         }
         return null;
     }
+    public List<Plant> showInfo(Object arg){
+        String species = (String)arg;
+        String query = "SELECT parks.plant.idplant, parks.zone.zoneName, " +
+                "parks.plant.age, parks.plant.plantingDate, parks.watering.periodicity, parks.watering.waterNorm FROM" +
+                "(parks.plant INNER JOIN parks.watering ON (parks.plant.idWatering = parks.watering.idwatering))" +
+                "INNER join parks.zone ON (parks.plant.idZone = parks.zone.idzone)" +
+                "WHERE parks.plant.species = '"+species+"' ";
 
+        try {
+            con = DriverManager.getConnection(url, user, password);
+            stmt = con.createStatement();
+
+            rs = stmt.executeQuery(query);
+
+            List<Plant> plants = new ArrayList<>();
+            while (rs.next()){
+                Plant plant = new Plant();
+                ParkZone parkZone = new ParkZone();
+                Watering watering = new Watering();
+
+                plant.setId(rs.getInt(1));
+                parkZone.setZoneName(rs.getString(2));
+                plant.setSpecies(species);
+                plant.setAge(rs.getInt(3));
+                plant.setPlantDate(rs.getDate(4));
+                watering.setPeriodicity(rs.getString(5));
+                watering.setWaterNorm(rs.getInt(6));
+
+                plant.setWatering(watering);
+                plant.setZone(parkZone);
+                plants.add(plant);
+            }
+            return plants;
+
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        } finally {
+            try { con.close(); } catch(SQLException se) { /*can't do anything */ }
+            try { stmt.close(); } catch(SQLException se) { /*can't do anything */ }
+            try { rs.close(); } catch(SQLException se) { /*can't do anything */ }
+        }
+        return null;
+    }
     @Override
     public void delete(int id) {
         Command command = tablesDirector.getCommand("plant");
@@ -212,5 +254,32 @@ public class PlantDAOImpl implements ParksAndRecDAO{
             try { stmt.close(); } catch(SQLException se) { /*can't do anything */ }
             try { rs.close(); } catch(SQLException se) { /*can't do anything */ }
         }
+    }
+
+    public List<String> getPlantSpecies(){
+        String query = "SELECT DISTINCT parks.plant.species FROM " +
+                "parks.plant ";
+        try {
+            con = DriverManager.getConnection(url, user, password);
+            stmt = con.createStatement();
+
+            rs = stmt.executeQuery(query);
+
+            List<String> plantSpecies = new ArrayList<>();
+            while (rs.next()){
+
+                String parkName = rs.getString(1);
+                plantSpecies.add(parkName);
+            }
+            return plantSpecies;
+
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        } finally {
+            try { con.close(); } catch(SQLException se) { /*can't do anything */ }
+            try { stmt.close(); } catch(SQLException se) { /*can't do anything */ }
+            try { rs.close(); } catch(SQLException se) { /*can't do anything */ }
+        }
+        return null;
     }
 }

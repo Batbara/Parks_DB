@@ -19,6 +19,16 @@ public class PlantService implements ParksAndRecService {
         }
 
     }
+    public List<Plant> showInfo(Object arg){
+        DAOFactory daoFactory = DAOFactory.getInstance();
+        PlantDAOImpl plantDAO = (PlantDAOImpl) daoFactory.getDAO("plant");
+        return plantDAO.showInfo(arg);
+    }
+    public List<String> getPlantSpecies(){
+        DAOFactory daoFactory = DAOFactory.getInstance();
+        PlantDAOImpl plantDAO = (PlantDAOImpl) daoFactory.getDAO("plant");
+        return plantDAO.getPlantSpecies();
+    }
     public List<String> getZonesInfo(){
         DAOFactory daoFactory = DAOFactory.getInstance();
         PlantDAOImpl plantDAO = (PlantDAOImpl) daoFactory.getDAO("plant");

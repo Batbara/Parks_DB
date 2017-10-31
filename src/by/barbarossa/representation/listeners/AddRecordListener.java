@@ -22,7 +22,7 @@ public class AddRecordListener extends Observable implements ActionListener {
         ControllerFactory factory = ControllerFactory.getInstance();
         Controller controller = factory.getController(menuName);
 
-        if (!menuName.equalsIgnoreCase("Служитель")) {
+        if (!menuName.equalsIgnoreCase("Служитель") && !menuName.equalsIgnoreCase("График")) {
             // FirmController firmController = (FirmController) factory.getController("firm");
             //this.menuName = menuName;
             this.addObserver(controller);
